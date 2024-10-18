@@ -1,5 +1,6 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { AppBar, Toolbar, Button, Typography, Box } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   // State to track if the user is logged in or not
@@ -13,21 +14,26 @@ export default function Header() {
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1a202c" }}>
-      <Toolbar className="flex justify-between">
-        {/* Logo and Title */}
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ fontWeight: "bold", display: "flex", alignItems: "center" }}
-        >
-          <img src="/logo.png" alt="logo" style={{ width: "40px", marginRight: "10px" }} />
-          DevilVote
-        </Typography>
+      <Toolbar>
+        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold", display: "flex", alignItems: "center" }}
+          >
+            <img
+              src="/logo.png"
+              alt="logo"
+              style={{ width: "40px", marginRight: "10px" }}
+            />
+            DevilVote
+          </Typography>
+        </Link>
 
         {/* Conditional Rendering based on Authentication Status */}
         <Box sx={{ ml: "auto" }}>
           <Button color="inherit" href="/">Home</Button>
-          
+
           {isLoggedIn ? (
             <>
               <Button color="inherit" href="/profile">Profile Settings</Button>
