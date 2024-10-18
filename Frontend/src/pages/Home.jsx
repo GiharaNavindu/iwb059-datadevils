@@ -4,6 +4,7 @@ import Features from '../components/Features';
 import Footer from '../components/Footer';
 import About from '../components/About';
 import Follow from '../components/Follow';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
@@ -37,7 +38,7 @@ export default function Home() {
           </h1>
 
           <p 
-            className="font-bold text-white" 
+            className="font-bold text-white mb-12" 
             style={{ 
               fontSize: '2rem',               
             
@@ -52,6 +53,14 @@ export default function Home() {
           >
             with secure and decentralized voting.
           </p>
+          <Link to="/sign-up"> {/* Change the path to your signup route */}
+            <button 
+              className="bg-purple-600 text-white py-1 px-5 rounded-lg transition duration-300 hover:bg-purple-300"
+              style={{ fontSize: '2rem' }} // Style the button
+            >
+              Register
+            </button>
+          </Link>
         </div>
       </div>
 
