@@ -106,13 +106,15 @@ export default function SignIn() {
       </div>
 
       {/* Right side - Image */}
-      <div className="flex-1 hidden md:block">
-     <img 
-     src="/img2.png" 
-     alt="Login" 
-     className="h-[700px] w-[720px] object-cover" 
-    />
-    </div>
+      <div className="flex-1 hidden md:block relative">
+  {/* Image */}
+  <img
+    src="/img2.png"
+    alt="Login"
+    className="h-[700px] w-[720px] object-cover"
+  />
+  
+</div>
     </div>
   );
 }
