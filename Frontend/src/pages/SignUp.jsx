@@ -26,9 +26,9 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-purple-50">
       {/* Left side - Sign Up Form */}
-      <div className="flex-1 flex justify-center items-center bg-white">
+      <div className="flex-1 flex justify-center items-center bg-purple-50">
         <div className="bg-white shadow-lg rounded-lg border-2 border-purple-500 p-12 w-[500px] transform transition-all duration-300 hover:scale-105">
           <Typography 
             variant="h4" 
@@ -160,13 +160,12 @@ export default function SignUp() {
 
       {/* Right side - Image */}
       <div className="flex-1 hidden md:block">
-  <img 
-    src="/img.jpg" 
-    alt="Login" 
-    className="h-[700px] w-[720px] object-cover" 
-  />
-</div>
-
+        <img 
+          src="/img2.png" 
+          alt="Sign Up" 
+          className="h-[700px] w-[720px] object-cover" 
+        />
+      </div>
     </div>
   );
 }
