@@ -1,10 +1,19 @@
 //import React from 'react';
 import Header from '../components/Header';
 import Features from '../components/Features';
+import Footer from '../components/Footer';
+import About from '../components/About';
+import Follow from '../components/Follow';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/back7.jpg')" }}>
+    <div
+    className="min-h-screen bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: "url('/back7.jpg')",
+      backgroundAttachment: "fixed", // Optional: For parallax effect
+    }}
+  >
       <Header />
 
       <div className="relative flex items-center justify-center min-h-screen"> {/* Center the content */}
@@ -47,6 +56,9 @@ export default function Home() {
       </div>
 
       <Features />
+      <About />
+      <Follow />
+      <Footer/>
     </div>
   );
 }

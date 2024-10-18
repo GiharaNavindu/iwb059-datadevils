@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 import {
   Security,
   Poll,
@@ -25,7 +25,7 @@ const Features = () => {
           <div className="relative transform -rotate-90">
             <h2 className="text-4xl font-bold text-gray-900">Features</h2>
           </div>
-          <div className="h-full w-2 bg-blue-700 ml-4"></div> 
+          <div className="h-full w-2 bg-purple-700 ml-4"></div> 
         </div>
         <div className="grid grid-cols-1 gap-6">
           {features.map((feature, index) => (
@@ -33,7 +33,7 @@ const Features = () => {
               key={index}
               className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-transform transform hover:scale-105"
             >
-              <div className="text-blue-500">{feature.icon}</div>
+              <div className="text-purple-500">{feature.icon}</div>
               <p className="text-lg font-medium text-gray-800">{feature.text}</p>
             </div>
           ))}
