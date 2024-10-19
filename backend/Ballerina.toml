@@ -1,0 +1,14 @@
+[package]
+org = "msi20"
+name = "sample"
+version = "0.1.0"
+distribution = "2201.10.2"
+
+[build-options]
+observabilityIncluded = true
+
+
+[[platform.java17.dependency]]
+groupId = "mysql"
+artifactId = "mysql-connector-java"
+version = "8.0.20"
