@@ -36,33 +36,32 @@ isolated function selectUser(string username) returns User|sql:Error {
 
 // Retrieve all users
 
+// Insert a new election into the database
 isolated function insertElection(NewElection election) returns string|error {
     sql:ExecutionResult result = check dbClient->execute(`
-        INSERT INTO Elections (name, date)
-        VALUES (${election.name}, ${election.date})
-    `);
+        INSERT INTO Elections (name, date) 
+        VALUES (${election.name}, ${election.date})`
+    );
 
     int|string? lastInsertId = result.lastInsertId;
     if lastInsertId is string {
         string electionId = lastInsertId;
-
         foreach var candidate in election.candidates {
             _ = check dbClient->execute(`
-                INSERT INTO Candidates (name, electionId, votes)
-                VALUES (${candidate.name}, ${electionId}, 0)
-            `);
+                INSERT INTO Candidates (name, electionId, votes) 
+                VALUES (${candidate.name}, ${electionId}, 0)`
+            );
         }
-
         return electionId;
     } else {
-        return error("Failed to get last insert ID");
+        return error("Failed to retrieve the last insert ID.");
     }
 }
 
+// Retrieve all election events from the database
 isolated function getEvents() returns Election[]|error {
-    stream<record {|string id; string name; string date;|}, sql:Error?> electionStream = dbClient->query(`
-        SELECT id, name, date FROM Elections
-    `);
+    stream<record {|string id; string name; string date;|}, sql:Error?> electionStream =
+        dbClient->query(`SELECT id, name, date FROM Elections`);
 
     Election[] events = [];
     check from record {|string id; string name; string date;|} electionRecord in electionStream
@@ -80,10 +79,10 @@ isolated function getEvents() returns Election[]|error {
     return events;
 }
 
+// Retrieve all candidates for a given election ID
 isolated function getCandidates(string electionId) returns Candidate[]|error {
-    stream<record {|string name; int votes;|}, sql:Error?> candidateStream = dbClient->query(`
-        SELECT name, votes FROM Candidates WHERE electionId = ${electionId}
-    `);
+    stream<record {|string name; int votes;|}, sql:Error?> candidateStream =
+        dbClient->query(`SELECT name, votes FROM Candidates WHERE electionId = ${electionId}`);
 
     Candidate[] candidates = [];
     check from record {|string name; int votes;|} candidateRecord in candidateStream
@@ -98,15 +97,14 @@ isolated function getCandidates(string electionId) returns Candidate[]|error {
     return candidates;
 }
 
-isolated function updateVotes(string electionId, string candidateId) returns error? {
+// Update vote count for a specific candidate in an election
+isolated function updateVotes(string electionId, string candidateName) returns error? {
     sql:ExecutionResult result = check dbClient->execute(`
-        UPDATE Candidates
-        SET votes = votes + 1
-        WHERE electionId = ${electionId} AND id = ${candidateId}
-    `);
+        UPDATE Candidates 
+        SET votes = votes + 1 
+        WHERE electionId = ${electionId} AND name = ${candidateName}`);
 
     if result.affectedRowCount == 0 {
-        return error("No candidate found with the given ID in the specified election");
+        return error("No candidate found with the given name in the specified election.");
     }
 }
-
