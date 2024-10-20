@@ -240,13 +240,7 @@ export default function SignIn() {
           </form>
         </div>
       </div>
-      <div className="flex-1 hidden md:block relative">
-        <img
-          src="/img2.png"
-          alt="Login"
-          className="h-[700px] w-[720px] object-cover"
-        />
-      </div>
+      
     </div>
   );
 }
