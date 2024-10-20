@@ -79,10 +79,11 @@ import {
   TextField,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; // Import AdapterDayjs
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; 
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
+import Header from '../components/Header'; 
 
 const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
@@ -92,7 +93,7 @@ const AdminDashboard = () => {
     date: null,
   });
   const [newCandidate, setNewCandidate] = useState("");
-  const [step, setStep] = useState("create"); // 'create', 'add', 'save'
+  const [step, setStep] = useState("create");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -147,18 +148,21 @@ const AdminDashboard = () => {
   };
 
   const isEventPast = (date) => {
-    return dayjs(date).isBefore(dayjs()); // Use dayjs for date comparison
+    return dayjs(date).isBefore(dayjs());
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      <Header /> 
+      <div className="container mx-auto p-6">
+        <h1 className="text-4xl font-bold mb-8 text-purple-700">Admin Dashboard</h1>
 
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 className="text-2xl font-semibold mb-4">Create New Election</h2>
+        {/* Election Creation Section */}
+        <div className="bg-white shadow-md rounded-lg px-10 py-8 mb-6">
+          <h2 className="text-3xl font-semibold mb-6 text-purple-600">Create New Election</h2>
+
           {step === "create" && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <TextField
                 fullWidth
                 label="Election Name"
@@ -182,6 +186,7 @@ const AdminDashboard = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className="bg-purple-500 hover:bg-purple-900"
                 onClick={handleCreateElection}
               >
                 Create Election
@@ -190,10 +195,8 @@ const AdminDashboard = () => {
           )}
 
           {step === "add" && (
-            <div className="space-y-4">
-              <h3 className="text-xl">
-                Adding Candidates to: {currentElection.name}
-              </h3>
+            <div className="space-y-5">
+              <h3 className="text-xl">Adding Candidates to: <span className="font-semibold text-purple-700">{currentElection.name}</span></h3>
               <TextField
                 fullWidth
                 label="Candidate Name"
@@ -204,18 +207,20 @@ const AdminDashboard = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className="bg-purple-600 hover:bg-purple-700"
                 onClick={handleAddCandidate}
               >
                 Add Candidate
               </Button>
-              <ul className="list-disc pl-5">
+              <ul className="list-disc pl-6">
                 {currentElection.candidates.map((candidate, index) => (
-                  <li key={index}>{candidate.name}</li>
+                  <li key={index} className="text-purple-500">{candidate.name}</li>
                 ))}
               </ul>
               <Button
                 variant="contained"
                 color="secondary"
+                className="bg-purple-700 hover:bg-purple-600"
                 onClick={() => setStep("save")}
               >
                 Finish Adding Candidates
@@ -224,12 +229,12 @@ const AdminDashboard = () => {
           )}
 
           {step === "save" && (
-            <div className="space-y-4">
-              <h3 className="text-xl">Review and Save Election</h3>
-              <p>Election Name: {currentElection.name}</p>
-              <p>Election Date: {currentElection.date?.format("MM/DD/YYYY")}</p>
-              <p>Candidates:</p>
-              <ul className="list-disc pl-5">
+            <div className="space-y-5">
+              <h3 className="text-xl font-semibold text-purple-700">Review and Save Election</h3>
+              <p className="text-gray-700">Election Name: <span className="font-semibold">{currentElection.name}</span></p>
+              <p className="text-gray-700">Election Date: <span className="font-semibold">{currentElection.date?.format("MM/DD/YYYY")}</span></p>
+              <p className="text-gray-700">Candidates:</p>
+              <ul className="list-disc pl-6 text-purple-600">
                 {currentElection.candidates.map((candidate, index) => (
                   <li key={index}>{candidate.name}</li>
                 ))}
@@ -237,6 +242,7 @@ const AdminDashboard = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className="bg-purple-600 hover:bg-purple-700"
                 onClick={handleSaveElection}
               >
                 Save Election
@@ -245,15 +251,16 @@ const AdminDashboard = () => {
           )}
         </div>
 
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8">
-          <h2 className="text-2xl font-semibold mb-4">Election Events</h2>
+        {/* Election Events Section */}
+        <div className="bg-white shadow-md rounded-lg px-10 py-8">
+          <h2 className="text-3xl font-semibold mb-6 text-purple-600">Election Events</h2>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Election Name</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell className="text-purple-700 font-semibold">Election Name</TableCell>
+                  <TableCell className="text-purple-700 font-semibold">Date</TableCell>
+                  <TableCell className="text-purple-700 font-semibold">Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -261,15 +268,11 @@ const AdminDashboard = () => {
                   <TableRow
                     key={index}
                     onClick={() => handleEventClick(event)}
-                    className="cursor-pointer hover:bg-gray-100"
+                    className="cursor-pointer hover:bg-purple-50"
                   >
                     <TableCell>{event.name}</TableCell>
-                    <TableCell>
-                      {dayjs(event.date).format("MM/DD/YYYY")}
-                    </TableCell>
-                    <TableCell>
-                      {isEventPast(event.date) ? "Completed" : "Upcoming"}
-                    </TableCell>
+                    <TableCell>{dayjs(event.date).format("MM/DD/YYYY")}</TableCell>
+                    <TableCell>{isEventPast(event.date) ? "Completed" : "Upcoming"}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -285,18 +288,16 @@ const AdminDashboard = () => {
                 <p>Date: {dayjs(selectedEvent.date).format("MM/DD/YYYY")}</p>
                 {isEventPast(selectedEvent.date) ? (
                   <div>
-                    <h4 className="font-semibold mt-2">Results:</h4>
+                    <h4 className="font-semibold text-purple-700 mt-2">Results:</h4>
                     <ul>
                       {selectedEvent.candidates.map((candidate, index) => (
-                        <li key={index}>
-                          {candidate.name}: {candidate.votes} votes
-                        </li>
+                        <li key={index}>{candidate.name}: {candidate.votes} votes</li>
                       ))}
                     </ul>
                   </div>
                 ) : (
                   <div>
-                    <h4 className="font-semibold mt-2">Candidates:</h4>
+                    <h4 className="font-semibold text-purple-700 mt-2">Candidates:</h4>
                     <ul>
                       {selectedEvent.candidates.map((candidate, index) => (
                         <li key={index}>{candidate.name}</li>
@@ -308,7 +309,7 @@ const AdminDashboard = () => {
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={closeDialog}>Close</Button>
+            <Button onClick={closeDialog} className="text-purple-600">Close</Button>
           </DialogActions>
         </Dialog>
       </div>
