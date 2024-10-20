@@ -1,7 +1,5 @@
 public type User record {|
-    readonly string id;
-    string FullName;
-    int age;
+
     string username;
     string password;
 |};
