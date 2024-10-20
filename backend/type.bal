@@ -1,47 +1,29 @@
 public type User record {|
-
     string username;
     string password;
     string role;
 |};
 
-public type Vote record {|
-    readonly string id;
-    string userId;
-    string candidateId;
-    string electionId;
-    string vote;
-
-|};
-
 public type Candidate record {|
-
     string name;
-
+    int votes;
 |};
 
 public type Election record {|
-
+    string id;
     string name;
     string date;
+    Candidate[] candidates;
 |};
 
-public type ElectionCandidate record {|
-    string electionName;
-    string candidateName;
+public type NewElection record {|
+    string name;
+    string date;
+    Candidate[] candidates;
 |};
 
-public type ElectionVoter record {|
-
-    string electionName;
-    string voter;
-
-|};
-
-public type ElectionResult record {|
-    readonly string id;
-    string electionId;
+public type Vote record {|
+    string userId;
     string candidateId;
-    string voteCount;
+    string electionId;
 |};
-

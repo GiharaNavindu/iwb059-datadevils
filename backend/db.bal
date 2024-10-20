@@ -23,8 +23,8 @@ final mysql:Client dbClient = check new (
 // Insert a new user into the database
 isolated function insertUser(User user) returns sql:ExecutionResult|error {
     sql:ParameterizedQuery query = `
-        INSERT INTO Users ( username, password,role) 
-        VALUES ( ${user.username}, ${user.password},${user.role})`;
+        INSERT INTO Users (username, password, role) 
+        VALUES (${user.username}, ${user.password}, ${user.role})`;
     return dbClient->execute(query);
 }
 
@@ -34,52 +34,79 @@ isolated function selectUser(string username) returns User|sql:Error {
     return dbClient->queryRow(query);
 }
 
-isolated function selectAllUsers() returns User[]|sql:Error {
-    sql:ParameterizedQuery query = `SELECT * FROM Users`;
-    stream<User, sql:Error?> userStream = dbClient->query(query);
-    return dbClient->queryRow(query);
+// Retrieve all users
+
+isolated function insertElection(NewElection election) returns string|error {
+    sql:ExecutionResult result = check dbClient->execute(`
+        INSERT INTO Elections (name, date)
+        VALUES (${election.name}, ${election.date})
+    `);
+
+    int|string? lastInsertId = result.lastInsertId;
+    if lastInsertId is string {
+        string electionId = lastInsertId;
+
+        foreach var candidate in election.candidates {
+            _ = check dbClient->execute(`
+                INSERT INTO Candidates (name, electionId, votes)
+                VALUES (${candidate.name}, ${electionId}, 0)
+            `);
+        }
+
+        return electionId;
+    } else {
+        return error("Failed to get last insert ID");
+    }
 }
 
-// // Insert a new election
-isolated function insertElection(Election election) returns sql:ExecutionResult|error {
-    sql:ParameterizedQuery query = `
-        INSERT INTO Elections ( name, date) 
-        VALUES ( ${election.name}, ${election.date})`;
-    return dbClient->execute(query);
+isolated function getEvents() returns Election[]|error {
+    stream<record {|string id; string name; string date;|}, sql:Error?> electionStream = dbClient->query(`
+        SELECT id, name, date FROM Elections
+    `);
+
+    Election[] events = [];
+    check from record {|string id; string name; string date;|} electionRecord in electionStream
+        do {
+            Candidate[] candidates = check getCandidates(electionRecord.id);
+            events.push({
+                id: electionRecord.id,
+                name: electionRecord.name,
+                date: electionRecord.date,
+                candidates: candidates
+            });
+        };
+
+    check electionStream.close();
+    return events;
 }
 
-// // Retrieve an election by ID
-// isolated function selectElection(string id) returns Election|sql:Error {
-//     sql:ParameterizedQuery query = `SELECT * FROM Elections WHERE id = ${id}`;
-//     return dbClient->queryRow(query);
-// }
+isolated function getCandidates(string electionId) returns Candidate[]|error {
+    stream<record {|string name; int votes;|}, sql:Error?> candidateStream = dbClient->query(`
+        SELECT name, votes FROM Candidates WHERE electionId = ${electionId}
+    `);
 
-// // Insert a new candidate
-// isolated function insertCandidate(Candidate candidate) returns sql:ExecutionResult|error {
-//     sql:ParameterizedQuery query = `
-//         INSERT INTO Candidates (id, name, party, electionId) 
-//         VALUES (${candidate.id}, ${candidate.name}, ${candidate.party}, ${candidate.electionId})`;
-//     return dbClient->execute(query);
-// }
+    Candidate[] candidates = [];
+    check from record {|string name; int votes;|} candidateRecord in candidateStream
+        do {
+            candidates.push({
+                name: candidateRecord.name,
+                votes: candidateRecord.votes
+            });
+        };
 
-// // Retrieve a candidate by ID
-// isolated function selectCandidate(string id) returns Candidate|sql:Error {
-//     sql:ParameterizedQuery query = `SELECT * FROM Candidates WHERE id = ${id}`;
-//     return dbClient->queryRow(query);
-// }
+    check candidateStream.close();
+    return candidates;
+}
 
-// // Insert a vote
-// isolated function insertVote(Vote vote) returns sql:ExecutionResult|error {
-//     sql:ParameterizedQuery query = `
-//         INSERT INTO Votes (id, userId, candidateId, electionId, vote) 
-//         VALUES (${vote.id}, ${vote.userId}, ${vote.candidateId}, ${vote.electionId}, ${vote.vote})`;
-//     return dbClient->execute(query);
-// }
+isolated function updateVotes(string electionId, string candidateId) returns error? {
+    sql:ExecutionResult result = check dbClient->execute(`
+        UPDATE Candidates
+        SET votes = votes + 1
+        WHERE electionId = ${electionId} AND id = ${candidateId}
+    `);
 
-// // Retrieve votes for a specific election
-// isolated function selectVotesByElection(string electionId) returns Vote[]|sql:Error {
-//     sql:ParameterizedQuery query = `SELECT * FROM Votes WHERE electionId = ${electionId}`;
-//     stream<Vote, sql:Error?> voteStream = dbClient->query(query);
-//     return from Vote vote in voteStream
-//         select vote;
-// }
+    if result.affectedRowCount == 0 {
+        return error("No candidate found with the given ID in the specified election");
+    }
+}
+
