@@ -170,7 +170,15 @@
 //   );
 // }
 
-import { Button, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -178,36 +186,33 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("voter"); // Default role is 'voter'
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    // Basic validation for password match
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
 
-    // Prepare user data
     const userData = {
-      username: email, // Email as username
+      username: email,
       password: password,
+      role: role, // Include role in the user data
     };
 
-    // Implement actual signup logic (API call to create the account)
     try {
       const response = await fetch("http://localhost:9090/election/users", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
       if (response.ok) {
-        alert("Account created successfully");
-        navigate("/sign-in"); // Redirect to sign-in page
+        alert(`Account created successfully as ${role}`);
+        navigate("/sign-in"); // Redirect to sign-in
       } else {
         alert("Failed to create account");
       }
@@ -225,7 +230,7 @@ export default function SignUp() {
           <Typography
             variant="h4"
             className="mb-6 text-center text-purple-600 font-extrabold"
-            style={{ fontSize: "2rem" }} // Increased font size for the title
+            style={{ fontSize: "2rem" }}
           >
             Sign Up
           </Typography>
@@ -239,16 +244,10 @@ export default function SignUp() {
               onChange={(e) => setEmail(e.target.value)}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  fontSize: "1.1rem", // Increased font size of the input text
-                  "& fieldset": {
-                    borderColor: "#1a202c", // border color
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B708EDFF", // hover effect color
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B708EDFF", // focused field color
-                  },
+                  fontSize: "1.1rem",
+                  "& fieldset": { borderColor: "#1a202c" },
+                  "&:hover fieldset": { borderColor: "#B708EDFF" },
+                  "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
                 },
               }}
             />
@@ -262,16 +261,10 @@ export default function SignUp() {
               onChange={(e) => setPassword(e.target.value)}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  fontSize: "1.1rem", // Increased font size of the input text
-                  "& fieldset": {
-                    borderColor: "#1a202c", // border color
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B708EDFF", // hover effect color
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B708EDFF", // focused field color
-                  },
+                  fontSize: "1.1rem",
+                  "& fieldset": { borderColor: "#1a202c" },
+                  "&:hover fieldset": { borderColor: "#B708EDFF" },
+                  "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
                 },
               }}
             />
@@ -285,19 +278,36 @@ export default function SignUp() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  fontSize: "1.1rem", // Increased font size of the input text
-                  "& fieldset": {
-                    borderColor: "#1a202c", // border color
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B708EDFF", // hover effect color
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B708EDFF", // focused field color
-                  },
+                  fontSize: "1.1rem",
+                  "& fieldset": { borderColor: "#1a202c" },
+                  "&:hover fieldset": { borderColor: "#B708EDFF" },
+                  "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
                 },
               }}
             />
+
+            {/* Role Selection */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role-select"
+                value={role}
+                label="Role"
+                onChange={(e) => setRole(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    fontSize: "1.1rem",
+                    "& fieldset": { borderColor: "#1a202c" },
+                    "&:hover fieldset": { borderColor: "#BD0AF4FF" },
+                    "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
+                  },
+                }}
+              >
+                <MenuItem value="voter">User</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+              </Select>
+            </FormControl>
 
             <Button
               variant="contained"
@@ -306,12 +316,10 @@ export default function SignUp() {
               fullWidth
               sx={{
                 mt: 3,
-                padding: "12px", // Increased button padding
-                fontSize: "1.2rem", // Increased button text size
+                padding: "12px",
+                fontSize: "1.2rem",
                 backgroundColor: "#B408EDFF",
-                "&:hover": {
-                  backgroundColor: "#7B1193FF",
-                },
+                "&:hover": { backgroundColor: "#7B1193FF" },
                 fontWeight: "bold",
               }}
             >
