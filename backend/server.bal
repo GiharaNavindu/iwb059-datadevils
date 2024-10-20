@@ -2,6 +2,8 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/sql;
 
+// Ensure this import is correct and points to the module where Candidate is defined
+
 // import ballerinax/mysql;
 
 @http:ServiceConfig {
@@ -33,75 +35,47 @@ service /election on new http:Listener(9090) {
         return <http:InternalServerError>{body: {message: "Error retrieving user"}};
     }
 
-    isolated resource function get users() returns User[]|http:InternalServerError {
-        User[]|sql:Error userEntries = selectAllUsers();
-        if userEntries is User[] {
-            return userEntries;
+    // Create a new election
+    resource function post events(NewElection election) returns http:Created|http:InternalServerError {
+        string|error result = insertElection(election);
+        if result is string {
+            return http:CREATED;
         }
-        return <http:InternalServerError>{body: {message: "Error retrieving users"}};
+        return http:INTERNAL_SERVER_ERROR;
     }
-}
 
-// Election-related operations
-isolated     resource function post elections(Election election) returns http:Ok|http:InternalServerError     {
-        sql:ExecutionResult|error result= insertElection(election);
-if result is         sql:ExecutionResult          {
-return http:OK ;
+    // Get all events
+    resource function get events() returns Election[]|http:InternalServerError {
+        Election[]|error events = getEvents();
+        if events is Election[] {
+            return events;
         }
-        log        :printError        ("Failed to insert election" , result);
-return http:INTERNAL_SERVER_ERROR ;
+        return http:INTERNAL_SERVER_ERROR;
     }
 
-    isolated resource function get elections/[string id]() returns Election|http:NotFound|http:InternalServerError     {
-        Election|sql:Error electionEntry= selectElection(id);
-if electionEntry is Election {
-return electionEntry;
+    // Vote in an election
+    resource function put events/[string electionId]/vote(Vote vote) returns http:Ok|http:BadRequest|http:InternalServerError {
+        Election[]|error events = getEvents();
+        if events is error {
+            return http:INTERNAL_SERVER_ERROR;
+        }
+
+        Election? targetEvent = ();
+        foreach var e in events {
+            if e.id == electionId {
+                targetEvent = e;
+                break;
+            }
+        }
+        if targetEvent is () {
+            return <http:BadRequest>{body: {message: "Election not found"}};
+        }
+
+        error? result = updateVotes(electionId, vote.candidateId);
+        if result is error {
+            return http:INTERNAL_SERVER_ERROR;
+        }
+
+        return http:OK;
     }
-if electionEntry is     sql:NoRowsError           {
-    return <http:NotFound>      {body:  {message:  "Election not found" } } ;
 }
-return <http:InternalServerError>{body: {message: "Error retrieving election"}};
-}
-
-// // Vote-related operations
-// isolated     resource function post votes(Vote vote) returns http:Ok|http:InternalServerError     {
-//         sql:ExecutionResult|error result= insertVote(vote);
-// if result is         sql:ExecutionResult          {
-// return http:OK ;
-//         }
-//         log        :printError        ("Failed to insert vote" , result);
-// return http:INTERNAL_SERVER_ERROR ;
-//     }
-
-//     isolated resource function get votes/[string electionId]() returns Vote[]|http:NotFound|http:InternalServerError     {
-//         Vote[]|sql:Error voteEntries= selectVotesByElection(electionId);
-// if voteEntries is Vote        [] {
-// return voteEntries;
-//     }
-// if voteEntries is     sql:NoRowsError           {
-//     return <http:NotFound>      {body:  {message:  "No votes found for this election" } } ;
-// }
-// return <http:InternalServerError>{body: {message: "Error retrieving votes"}};
-// }
-
-// // Candidate-related operations
-// isolated     resource function post candidates(Candidate candidate) returns http:Ok|http:InternalServerError     {
-//         sql:ExecutionResult|error result= insertCandidate(candidate);
-// if result is         sql:ExecutionResult          {
-// return http:OK ;
-//         }
-//         log        :printError        ("Failed to insert candidate" , result);
-// return http:INTERNAL_SERVER_ERROR ;
-//     }
-
-//     isolated resource function get candidates/[string id]() returns Candidate|http:NotFound|http:InternalServerError     {
-//         Candidate|sql:Error candidateEntry= selectCandidate(id);
-// if candidateEntry is Candidate {
-// return candidateEntry;
-//     }
-// if candidateEntry is     sql:NoRowsError           {
-//     return <http:NotFound>      {body:  {message:  "Candidate not found" } } ;
-// }
-// return <http:InternalServerError>{body: {message: "Error retrieving candidate"}};
-// }
-// }
