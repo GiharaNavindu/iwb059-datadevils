@@ -181,6 +181,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from '../components/Header';
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -223,120 +224,126 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex h-screen bg-purple-50">
-      {/* Left side - Sign Up Form */}
-      <div className="flex-1 flex justify-center items-center bg-purple-50">
-        <div className="bg-white shadow-lg rounded-lg border-2 border-purple-500 p-12 w-[500px] transform transition-all duration-300 hover:scale-105">
-          <Typography
-            variant="h4"
-            className="mb-6 text-center text-purple-600 font-extrabold"
-            style={{ fontSize: "2rem" }}
-          >
-            Sign Up
-          </Typography>
-          <form onSubmit={handleSignUp}>
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  fontSize: "1.1rem",
-                  "& fieldset": { borderColor: "#1a202c" },
-                  "&:hover fieldset": { borderColor: "#B708EDFF" },
-                  "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
-                },
-              }}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  fontSize: "1.1rem",
-                  "& fieldset": { borderColor: "#1a202c" },
-                  "&:hover fieldset": { borderColor: "#B708EDFF" },
-                  "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
-                },
-              }}
-            />
-            <TextField
-              label="Confirm Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  fontSize: "1.1rem",
-                  "& fieldset": { borderColor: "#1a202c" },
-                  "&:hover fieldset": { borderColor: "#B708EDFF" },
-                  "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
-                },
-              }}
-            />
-
-            {/* Role Selection */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role-select"
-                value={role}
-                label="Role"
-                onChange={(e) => setRole(e.target.value)}
+    <>
+      <Header />
+      <div
+        style={{
+          display: "flex",
+          height: "100vh",
+          backgroundImage: `url('/back9.jpg')`, // Path to your background image
+          backgroundSize: "cover", // Cover the entire screen
+          backgroundPosition: "center", // Center the background image
+          backgroundRepeat: "no-repeat", // Prevent repeating the image
+        }}
+      >
+        {/* Left side - Sign Up Form */}
+        <div className="flex-1 flex justify-center items-center ">
+          <div className="bg-white shadow-lg rounded-lg border-2 border-purple-500 p-12 w-[500px] transform transition-all duration-300 hover:scale-105">
+            <Typography
+              variant="h4"
+              className="mb-6 text-center text-purple-600 font-extrabold"
+              style={{ fontSize: "2rem" }}
+            >
+              Sign Up
+            </Typography>
+            <form onSubmit={handleSignUp}>
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     fontSize: "1.1rem",
                     "& fieldset": { borderColor: "#1a202c" },
-                    "&:hover fieldset": { borderColor: "#BD0AF4FF" },
+                    "&:hover fieldset": { borderColor: "#B708EDFF" },
                     "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
                   },
                 }}
+              />
+              <TextField
+                label="Password"
+                type="password"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    fontSize: "1.1rem",
+                    "& fieldset": { borderColor: "#1a202c" },
+                    "&:hover fieldset": { borderColor: "#B708EDFF" },
+                    "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
+                  },
+                }}
+              />
+              <TextField
+                label="Confirm Password"
+                type="password"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    fontSize: "1.1rem",
+                    "& fieldset": { borderColor: "#1a202c" },
+                    "&:hover fieldset": { borderColor: "#B708EDFF" },
+                    "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
+                  },
+                }}
+              />
+
+              {/* Role Selection */}
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="role-label">Role</InputLabel>
+                <Select
+                  labelId="role-label"
+                  id="role-select"
+                  value={role}
+                  label="Role"
+                  onChange={(e) => setRole(e.target.value)}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      fontSize: "1.1rem",
+                      "& fieldset": { borderColor: "#1a202c" },
+                      "&:hover fieldset": { borderColor: "#BD0AF4FF" },
+                      "&.Mui-focused fieldset": { borderColor: "#B708EDFF" },
+                    },
+                  }}
+                >
+                  <MenuItem value="voter">User</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                fullWidth
+                sx={{
+                  mt: 3,
+                  padding: "12px",
+                  fontSize: "1.2rem",
+                  backgroundColor: "#B408EDFF",
+                  "&:hover": { backgroundColor: "#7B1193FF" },
+                  fontWeight: "bold",
+                }}
               >
-                <MenuItem value="voter">User</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-              </Select>
-            </FormControl>
-
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              fullWidth
-              sx={{
-                mt: 3,
-                padding: "12px",
-                fontSize: "1.2rem",
-                backgroundColor: "#B408EDFF",
-                "&:hover": { backgroundColor: "#7B1193FF" },
-                fontWeight: "bold",
-              }}
-            >
-              Sign Up
-            </Button>
-          </form>
+                Sign Up
+              </Button>
+            </form>
+          </div>
         </div>
-      </div>
 
-      {/* Right side - Image */}
-      <div className="flex-1 hidden md:block">
-        <img
-          src="/img2.png"
-          alt="Sign Up"
-          className="h-[700px] w-[720px] object-cover"
-        />
+        {/* Right side - Optional content or left empty */}
+        <div className="flex-1"></div> {/* You can add content here if needed */}
       </div>
-    </div>
+    </>
   );
 }
