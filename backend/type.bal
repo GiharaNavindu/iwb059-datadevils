@@ -2,6 +2,7 @@ public type User record {|
 
     string username;
     string password;
+    string role;
 |};
 
 public type Vote record {|
@@ -14,30 +15,26 @@ public type Vote record {|
 |};
 
 public type Candidate record {|
-    readonly string id;
+
     string name;
-    string party;
-    string electionId;
+
 |};
 
 public type Election record {|
-    readonly string id;
+
     string name;
     string date;
-    string description;
-    string status;
 |};
 
 public type ElectionCandidate record {|
-    readonly string id;
-    string electionId;
-    string candidateId;
+    string electionName;
+    string candidateName;
 |};
 
 public type ElectionVoter record {|
-    readonly string id;
-    string electionId;
-    string voterId;
+
+    string electionName;
+    string voter;
 
 |};
 

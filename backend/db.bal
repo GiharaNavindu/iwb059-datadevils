@@ -23,8 +23,8 @@ final mysql:Client dbClient = check new (
 // Insert a new user into the database
 isolated function insertUser(User user) returns sql:ExecutionResult|error {
     sql:ParameterizedQuery query = `
-        INSERT INTO Users ( username, password) 
-        VALUES ( ${user.username}, ${user.password})`;
+        INSERT INTO Users ( username, password,role) 
+        VALUES ( ${user.username}, ${user.password},${user.role})`;
     return dbClient->execute(query);
 }
 
@@ -41,12 +41,12 @@ isolated function selectAllUsers() returns User[]|sql:Error {
 }
 
 // // Insert a new election
-// isolated function insertElection(Election election) returns sql:ExecutionResult|error {
-//     sql:ParameterizedQuery query = `
-//         INSERT INTO Elections (id, name, date, description, status) 
-//         VALUES (${election.id}, ${election.name}, ${election.date}, ${election.description}, ${election.status})`;
-//     return dbClient->execute(query);
-// }
+isolated function insertElection(Election election) returns sql:ExecutionResult|error {
+    sql:ParameterizedQuery query = `
+        INSERT INTO Elections ( name, date) 
+        VALUES ( ${election.name}, ${election.date})`;
+    return dbClient->execute(query);
+}
 
 // // Retrieve an election by ID
 // isolated function selectElection(string id) returns Election|sql:Error {
