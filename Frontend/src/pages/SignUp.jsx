@@ -329,14 +329,7 @@ export default function SignUp() {
         </div>
       </div>
 
-      {/* Right side - Image */}
-      <div className="flex-1 hidden md:block">
-        <img
-          src="/img2.png"
-          alt="Sign Up"
-          className="h-[700px] w-[720px] object-cover"
-        />
-      </div>
+      
     </div>
   );
 }
