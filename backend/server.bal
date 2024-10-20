@@ -43,25 +43,25 @@ service /election on new http:Listener(9090) {
 }
 
 // Election-related operations
-isolated     resource function post elections(Election election) returns http:Ok|http:InternalServerError     {
-        sql:ExecutionResult|error result= insertElection(election);
-if result is         sql:ExecutionResult          {
-return http:OK ;
-        }
-        log        :printError        ("Failed to insert election" , result);
-return http:INTERNAL_SERVER_ERROR ;
-    }
+//isolated     resource function post elections(Election election) returns http:Ok|http:InternalServerError     {
+        //sql:ExecutionResult|error result= insertElection(election);
+//if result is         sql:ExecutionResult          {
+//return http:OK ;
+        //}
+       // log        :printError        ("Failed to insert election" , result);
+//return http:INTERNAL_SERVER_ERROR ;
+   // }
 
-    isolated resource function get elections/[string id]() returns Election|http:NotFound|http:InternalServerError     {
-        Election|sql:Error electionEntry= selectElection(id);
-if electionEntry is Election {
-return electionEntry;
-    }
-if electionEntry is     sql:NoRowsError           {
-    return <http:NotFound>      {body:  {message:  "Election not found" } } ;
-}
-return <http:InternalServerError>{body: {message: "Error retrieving election"}};
-}
+    //isolated resource function get elections/[string id]() returns Election|http:NotFound|http:InternalServerError     {
+       // Election|sql:Error electionEntry= selectElection(id);
+//if electionEntry is Election {
+//return electionEntry;
+   // }
+//if electionEntry is     sql:NoRowsError           {
+    //return <http:NotFound>      {body:  {message:  "Election not found" } } ;
+//}
+//return <http:InternalServerError>{body: {message: "Error retrieving election"}};
+//}
 
 // // Vote-related operations
 // isolated     resource function post votes(Vote vote) returns http:Ok|http:InternalServerError     {

@@ -62,7 +62,6 @@
 // };
 
 // export default AdminDashboard;
-
 import {
   Button,
   Dialog,
@@ -151,12 +150,13 @@ const AdminDashboard = () => {
   };
 
   return (
+    
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-6 text-purple-700">Admin Dashboard</h1>
 
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 className="text-2xl font-semibold mb-4">Create New Election</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-purple-600">Create New Election</h2>
           {step === "create" && (
             <div className="space-y-4">
               <TextField
@@ -170,6 +170,7 @@ const AdminDashboard = () => {
                     name: e.target.value,
                   })
                 }
+                sx={{ "& label.Mui-focused": { color: "purple" }, "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "purple" } }}
               />
               <DatePicker
                 label="Election Date"
@@ -177,11 +178,11 @@ const AdminDashboard = () => {
                 onChange={(newValue) =>
                   setCurrentElection({ ...currentElection, date: newValue })
                 }
-                renderInput={(params) => <TextField {...params} fullWidth />}
+                renderInput={(params) => <TextField {...params} fullWidth sx={{ "& label.Mui-focused": { color: "purple" }, "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "purple" } }} />}
               />
               <Button
                 variant="contained"
-                color="primary"
+                sx={{ backgroundColor: "purple", "&:hover": { backgroundColor: "darkpurple" } }}
                 onClick={handleCreateElection}
               >
                 Create Election
@@ -191,19 +192,18 @@ const AdminDashboard = () => {
 
           {step === "add" && (
             <div className="space-y-4">
-              <h3 className="text-xl">
-                Adding Candidates to: {currentElection.name}
-              </h3>
+              <h3 className="text-xl text-purple-600">Adding Candidates to: {currentElection.name}</h3>
               <TextField
                 fullWidth
                 label="Candidate Name"
                 variant="outlined"
                 value={newCandidate}
                 onChange={(e) => setNewCandidate(e.target.value)}
+                sx={{ "& label.Mui-focused": { color: "purple" }, "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "purple" } }}
               />
               <Button
                 variant="contained"
-                color="primary"
+                sx={{ backgroundColor: "purple", "&:hover": { backgroundColor: "darkpurple" } }}
                 onClick={handleAddCandidate}
               >
                 Add Candidate
@@ -215,7 +215,7 @@ const AdminDashboard = () => {
               </ul>
               <Button
                 variant="contained"
-                color="secondary"
+                sx={{ backgroundColor: "purple", "&:hover": { backgroundColor: "darkpurple" } }}
                 onClick={() => setStep("save")}
               >
                 Finish Adding Candidates
@@ -225,7 +225,7 @@ const AdminDashboard = () => {
 
           {step === "save" && (
             <div className="space-y-4">
-              <h3 className="text-xl">Review and Save Election</h3>
+              <h3 className="text-xl text-purple-600">Review and Save Election</h3>
               <p>Election Name: {currentElection.name}</p>
               <p>Election Date: {currentElection.date?.format("MM/DD/YYYY")}</p>
               <p>Candidates:</p>
@@ -236,7 +236,7 @@ const AdminDashboard = () => {
               </ul>
               <Button
                 variant="contained"
-                color="primary"
+                sx={{ backgroundColor: "purple", "&:hover": { backgroundColor: "darkpurple" } }}
                 onClick={handleSaveElection}
               >
                 Save Election
@@ -246,7 +246,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8">
-          <h2 className="text-2xl font-semibold mb-4">Election Events</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-purple-600">Election Events</h2>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -264,9 +264,7 @@ const AdminDashboard = () => {
                     className="cursor-pointer hover:bg-gray-100"
                   >
                     <TableCell>{event.name}</TableCell>
-                    <TableCell>
-                      {dayjs(event.date).format("MM/DD/YYYY")}
-                    </TableCell>
+                    <TableCell>{dayjs(event.date).format("MM/DD/YYYY")}</TableCell>
                     <TableCell>
                       {isEventPast(event.date) ? "Completed" : "Upcoming"}
                     </TableCell>
@@ -308,7 +306,9 @@ const AdminDashboard = () => {
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={closeDialog}>Close</Button>
+            <Button sx={{ color: "purple" }} onClick={closeDialog}>
+              Close
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
